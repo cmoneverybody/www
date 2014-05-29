@@ -17,28 +17,16 @@
          }
       </style>
       <script type="text/javascript">
-         $(function () {
-            $('button:first').click(function() {
-               $('#target').load('testLoad.php',
-                  {
-                     name: 'John',
-                     age: '35'
-                  },
-                  function(responseText, textStatus, XMLHttpRequest) {
-                     alert('textStatus = ' + textStatus +
-                        '\nСвойство readyState объекта XMLHttpRequest: ' + XMLHttpRequest.readyState +
-                     '\nСвойство status объекта XMLHttpRequest: ' + XMLHttpRequest.status);
-               });
-            });
-            $('button:last').click(function() {
-               $('#target').empty();
+         $(function() {
+            $('#load').click(function() {
+               $.getScript('testGetJS.js');
             });
          });
       </script>
    </head>
    <body>
       <div id="target"></div>
-      <button>Загрузить</button>>
+      <button id="load">Загрузить</button>>
       <button>Очистить</button>>
    </body>>
 </html>
