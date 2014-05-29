@@ -18,15 +18,39 @@
       </style>
       <script type="text/javascript">
          $(function() {
-            $('#load').click(function() {
-               $.getScript('testGetJS.js');
+            $('#loadJSON').click(function() {
+               $.getJSON('testGetJSON.php', function(data, textStatus, jqXHR){
+                  var items = [];
+                  $.each(data, function(i, item) {
+                     items.push(item.name + ': ' + item.phone);
+                  });
+                  $('#target').html(items.join('<br />'));
+               });
+            });
+            $('#loadJSONP').click(function() {
+               $.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?tags=nature&tagmode=any&format=json&jsoncallback=?',
+                  function(data){
+                     $.each(data.items, function(i, item){
+                        $('<img/>')
+                           .attr('src', item.media.m)
+                           .attr('title', item.title)
+                           .appendTo('#target');
+                        if (i == 5) {
+                           return false;
+                        }
+                     });
+                  });
+            });
+            $('#clearButton').click(function() {
+               $('#target').empty();
             });
          });
       </script>
    </head>
    <body>
       <div id="target"></div>
-      <button id="load">Загрузить</button>>
-      <button>Очистить</button>>
-   </body>>
+      <button id="loadJSON">Загрузить JSON</button>
+      <button id="loadJSONP">Загрузить JSONP</button>
+      <button id="clearButton">Очистить</button>
+   </body>
 </html>
