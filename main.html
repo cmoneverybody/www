@@ -15,15 +15,27 @@
             border: 3px double #369;
             overflow: auto;
          }
+         span {
+            color: red;
+         }
       </style>
       <script type="text/javascript">
          $(function() {
             $('#loadButton').click(function() {
-               $.post('testPost.php', {
-                  name: 'Alexey',
-                  age: '24'
-               }, function(data) {
-                  $('#target').text(data);
+               $.ajax('testAjax.php', {
+                  type: 'POST',
+                  data: 'name=John&age=35',
+                  timeout: 5000,
+                  beforeSend: function() {
+                     $('#target').text('Загрузка...')
+                  },
+                  success: function(data, textStatus, jqXHR) {
+                     $('#target').html(data + '<br />Статус ответа: ' + textStatus +
+                        '<br />Код ответа сервера: ' + jqXHR.status);
+                  },
+                  error: function(jqXHR, textStatus) {
+                     $('#target').html('<span>' + textStatus + '</span><br />Код ответа сервера: ' + jqXHR.status);
+                  }
                });
             });
             $('#clearButton').click(function() {
