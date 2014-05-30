@@ -15,38 +15,57 @@
             border: 3px double #369;
             overflow: auto;
          }
-         span {
-            color: red;
-         }
       </style>
       <script type="text/javascript">
          $(function() {
-            $('#loadButton').click(function() {
-               $.ajax('testAjax.php', {
-                  type: 'POST',
-                  data: 'name=John&age=35',
-                  timeout: 5000,
-                  beforeSend: function() {
-                     $('#target').text('Загрузка...')
-                  },
-                  success: function(data, textStatus, jqXHR) {
-                     $('#target').html(data + '<br />Статус ответа: ' + textStatus +
-                        '<br />Код ответа сервера: ' + jqXHR.status);
-                  },
-                  error: function(jqXHR, textStatus) {
-                     $('#target').html('<span>' + textStatus + '</span><br />Код ответа сервера: ' + jqXHR.status);
-                  }
+            $.ajaxSetup({
+               url: 'testEvents.php',
+               type: 'POST',
+               timeout: 4000,
+               beforeSend: function() {
+                  $('#target').append(new Date().getTime() + ' ==> beforeSend<br />')
+               },
+               success: function(data, textStatus, jqXHR) {
+                  $('#target').append(new Date().getTime() + ' ==> success<br />')
+               },
+               error: function(jqXHR, textStatus) {
+                  $('#target').append(new Date().getTime() + ' ==> error<br />')
+               },
+               complete: function() {
+                  $('#target').append(new Date().getTime() + ' ==> complite<br />')
+               }
+            });
+            $('#well').click(function() {
+               $('#target').empty();
+               $.ajax({
+                  data: 'er=none'
                });
             });
-            $('#clearButton').click(function() {
+            $('#bad').click(function() {
                $('#target').empty();
+               $.ajax({
+                  data: 'er=yes'
+               });
+            });
+            $('#target').ajaxStart(function() {
+               $(this).append(new Date().getTime() + ' =>> ajaxStart <br/>');
+            }).ajaxSend(function() {
+               $(this).append(new Date().getTime() + ' =>> ajaxSend <br/>');
+            }).ajaxSuccess(function() {
+               $(this).append(new Date().getTime() + ' =>> ajaxSuccess <br/>');
+            }).ajaxError(function() {
+               $(this).append(new Date().getTime() + ' =>> ajaxError <br/>');
+            }).ajaxComplete(function() {
+               $(this).append(new Date().getTime() + ' =>> ajaxComplite <br/>');
+            }).ajaxStop(function() {
+               $(this).append(new Date().getTime() + ' =>> ajaxStop <br/>');
             });
          });
       </script>
    </head>
    <body>
       <div id="target"></div>
-      <button id="loadButton">Загрузить</button>
-      <button id="clearButton">Очистить</button>
+      <button id="well">Успешный запрос</button>
+      <button id="bad">Ошибочный запрос</button>
    </body>
 </html>
