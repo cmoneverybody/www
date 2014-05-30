@@ -7,65 +7,36 @@
       <meta http-equiv="content-type" content="text/html; charset=utf-8" />
       <script src="jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
       <style type="text/css">
-         div {
-            width: 400px;
-            height: 400px;
-            padding: 10px;
-            margin: 10px;
-            border: 3px double #369;
-            overflow: auto;
-         }
       </style>
       <script type="text/javascript">
          $(function() {
-            $.ajaxSetup({
-               url: 'testEvents.php',
-               type: 'POST',
-               timeout: 4000,
-               beforeSend: function() {
-                  $('#target').append(new Date().getTime() + ' ==> beforeSend<br />')
-               },
-               success: function(data, textStatus, jqXHR) {
-                  $('#target').append(new Date().getTime() + ' ==> success<br />')
-               },
-               error: function(jqXHR, textStatus) {
-                  $('#target').append(new Date().getTime() + ' ==> error<br />')
-               },
-               complete: function() {
-                  $('#target').append(new Date().getTime() + ' ==> complite<br />')
-               }
-            });
-            $('#well').click(function() {
-               $('#target').empty();
-               $.ajax({
-                  data: 'er=none'
-               });
-            });
-            $('#bad').click(function() {
-               $('#target').empty();
-               $.ajax({
-                  data: 'er=yes'
-               });
-            });
-            $('#target').ajaxStart(function() {
-               $(this).append(new Date().getTime() + ' =>> ajaxStart <br/>');
-            }).ajaxSend(function() {
-               $(this).append(new Date().getTime() + ' =>> ajaxSend <br/>');
-            }).ajaxSuccess(function() {
-               $(this).append(new Date().getTime() + ' =>> ajaxSuccess <br/>');
-            }).ajaxError(function() {
-               $(this).append(new Date().getTime() + ' =>> ajaxError <br/>');
-            }).ajaxComplete(function() {
-               $(this).append(new Date().getTime() + ' =>> ajaxComplite <br/>');
-            }).ajaxStop(function() {
-               $(this).append(new Date().getTime() + ' =>> ajaxStop <br/>');
+            $('form').submit(function() {
+               console.log($(this).serializeArray());
+               alert($(this).serialize());
+               return false;
             });
          });
       </script>
    </head>
    <body>
-      <div id="target"></div>
-      <button id="well">Успешный запрос</button>
-      <button id="bad">Ошибочный запрос</button>
+      <form>
+         <div><input type="text" name="a" value="1" id="a"/></div>
+         <div><input type="text" name="b" value="2" id="b"/></div>
+         <div><input type="hidden" name="c" value="3" id="c"/></div>
+         <div>
+            <textarea name="d" rows="8" cols="40">4</textarea>
+         </div>
+         <div><select name="e">
+            <option value="5" selected="selected">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+         </select></div>
+         <div>
+            <input type="checkbox" name="f" value="true" id="f" />
+         </div>
+         <div>
+            <input type="submit" name="g" value="Submit" id="g" />
+         </div>
+      </form>
    </body>
 </html>
