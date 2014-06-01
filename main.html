@@ -3,43 +3,70 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
    <head>
-      <title>CHAPTER 10</title>
+      <title>Photo database</title>
       <meta http-equiv="content-type" content="text/html; charset=utf-8" />
       <script src="jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
       <style type="text/css">
-         div {
+         #result {
             float: left;
-            width: 100px;
-            height: 100px;
+            width: 500px;
+            height: 200px;
             padding: 10px;
             margin: 10px;
             border: 1px solid #369;
-         }
-         p {
-            color: red;
+            display: inline-block;
          }
       </style>
       <script type="text/javascript">
          $(function() {
-            var
-               arr = ['one', 'two', 'three', 'four', 'five'],
-               obj = {one: 1, two: 2, three: 3, four: 4, five: 5};
-            $.each(arr, function() {
-               $('#' + this).text('id = "' + this + '"');
-               return this != 'four';
-            });
-            $.each(obj, function(n, val) {
-               $('#' + n).append('<p>' + val + '</p>');
-               return this != 'four';
-            });
+            var form = document.forms.upload,
+                result = $('#result');
+            form.onsubmit = function() {
+               var file = this.elements.file1.files[0];
+               if (file) upload(file, function() {
+                  result.html('Передача файла прошла успешна!');
+               }, function() {
+                  result.html('Ошибка! Передача файла не удалась!');
+               }, function(loaded, total) {
+                  result.html('Передано ' + loaded + ' из ' + total);
+               });
+               return false;
+            }
+
+            function upload(file, onSuccess, onError, onProgress) {
+               var xhr = new XMLHttpRequest();
+               xhr.onload = xhr.onerror = function() {
+                  if(this.status != 200 || this.responseText != 'OK') {
+                     onError(this);
+                     return;
+                  }
+                  onSuccess();
+               };
+               xhr.upload.onprogress = function(event) {
+                  onProgress(event.loaded, event.total);
+               }
+               xhr.open("POST", "upload.php", true);
+               xhr.send(file);
+            }
          });
       </script>
    </head>
    <body>
-      <div id="one"></div>
-      <div id="two"></div>
-      <div id="three"></div>
-      <div id="four"></div>
-      <div id="five"></div>
+      <div id="result"></div>
+      <!--<button id="send">Получить фотографию</button>-->
+
+      <form name="upload">
+         <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
+         <input name="userfile" type="file" name="file1">
+         <input type="submit" value="Загрузить">
+      </form>
+
+
+      <!--<form enctype="multipart/form-data" action="/upload.php" method="post">
+         <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
+         <input name="userfile" type="file">
+         <br/>
+         <input type="submit" value="Сохранить изображение">
+      </form>-->
    </body>
 </html>
