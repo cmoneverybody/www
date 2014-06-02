@@ -6,12 +6,9 @@
  * Time: 20:11
  */
    if ($_POST) {
-      $uploaddir = 'uploads/';
-      echo 'File "' . $_FILES['userfile']['tmp_name'] . '" saved to "' . $uploaddir . $_FILES['userfile']['name'] . '"<br/>';
-      if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploaddir . $_FILES['userfile']['name'])) {
-         echo "File is valid, and was successfully uploaded.";
-      } else {
-         echo "There some errors!";
-      }
+      $uploadDir = 'uploads/';
+      if ($_FILES['image']['error'] == 0) {
+         move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $_FILES['image']['name']);
+      };
    }
 ?>
