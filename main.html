@@ -34,26 +34,27 @@
       font-size: 12px;
    }
 </style>
-<table>
-   <tr style="vertical-align: top;">
-      <td style="width: 300px;">
-         <form name="upload">
-            <input type="hidden" name="MAX_FILE_SIZE" value="52428800">
-            <input type="file" name="image">
-            <input type="submit" id="sendfile" value="Загрузить изображение">
-         </form>
-         <div id="indicator">
-            <div>Отправка файла на сервер</div>
-            <div><img src="resources/images/loading.gif"></div>
-         </div>
-         <div id="result"></div>
-      </td>
-      <td>
-         UID:<textarea id="filename">83</textarea>
-         <button id="getfile">Получить изображение</button>
-         <div id="output"></div>
-      </td>
-   </tr>
+   <table>
+      <tr style="vertical-align: top;">
+         <td style="width: 300px;">
+            <form name="upload">
+               <input type="hidden" name="MAX_FILE_SIZE" value="52428800">
+               <input type="file" name="image">
+               <input type="submit" id="sendfile" value="Загрузить изображение">
+            </form>
+            <div id="indicator">
+               <div>Отправка файла на сервер</div>
+               <div><img src="resources/images/loading.gif"></div>
+            </div>
+            <div id="result"></div>
+         </td>
+         <td>
+            UID:<textarea id="filename">83</textarea>
+            <button id="getfile">Получить изображение</button>
+            <div id="output"></div>
+         </td>
+      </tr>
+   </table>>
 <script>
    $('#indicator').hide();
    $('#sendfile').click(function() {
@@ -69,7 +70,11 @@
             },
             success: function (msg) {
                $('#indicator').hide();
-               $('#result').html(msg);
+               var data = $.parseJSON(msg),
+                  imagePath = data['fileName'];
+               if (typeof imagePath === 'string' && imagePath.length) {
+                  $('#output').append('<img src="' + imagePath + '">')
+               }
             },
             cache: false,
             contentType: false,
@@ -77,22 +82,6 @@
          });
 
          e.preventDefault();
-      });
-   });
-
-   $('#getfile').click(function() {
-      var formData = new FormData(),
-          uid = $('#filename').val();
-      $.ajax({
-         url: 'download.php',
-         type: 'get',
-         data: {'uid' : uid},
-         async: true,
-         cache: false,
-         contentType: false,
-         success: function(msg) {
-            $('#result').html(msg);
-         }
       });
    });
 </script>
